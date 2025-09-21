@@ -1,6 +1,6 @@
 # MedicalAgent — Azure AI Foundry Medical Research Agent (POC)
 
-**MedicalAgent** is a proof-of-concept project that demonstrates calling an Azure AI Foundry Agent from Python and integrating a Wikipedia serach as a tool for medical term lookups. It shows how to handle the agent lifecycle (threads, runs, `requires_action`) and how to confirm whether an answer came from the LLM itself.
+**MedicalAgent** is a proof-of-concept project that demonstrates calling an Azure AI Foundry Agent from Python and integrating a Wikipedia search as a tool for medical term lookups. It shows how to handle the agent lifecycle (threads, runs, `requires_action`) and how to confirm whether an answer came from the LLM itself.
 
 ---
 
