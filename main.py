@@ -54,7 +54,13 @@ functions = FunctionTool(functions=user_functions)
 agent = project_client.agents.create_agent(
     model=model_name,
     name="medical-agent",
-    instructions="You have access to a function `search_wikipedia(query)` that contains summaries of medical terms. You can choose to call this function based on the user query.",
+    instructions="""
+        You are a medical research assistant.  
+        - If the user asks about **definitions of drugs, diseases, or medical terms**, call the function `search_wikipedia(query)`.  
+        - If the user asks to **summarize, rewrite, or simplify text**, answer directly without using the function.  
+        - If unsure, prefer calling the function.  
+        - Keep answers under 60 words.
+        """,
     tools=functions.definitions,
 )
 print(f"Created agent, ID: {agent.id}")
@@ -64,7 +70,12 @@ thread = project_client.agents.threads.create()
 print(f"Created thread, ID: {thread.id}")
 
 #---------------- User Query -----------
-query = "Insulin"
+# Example Prompt to check wheather agent calls wikipedia or not
+# "Rewrite in simpler terms: patient presents with myocardial infarction." > Should not call Wikipedia
+# "What is metformin?" → Should call Wikipedia
+# "Tell me about insulin." → Should call Wikipedia
+# "hepatitis" → Should call Wikipedia
+query = "hepatitis"
 
 # Send a message to the thread
 message = project_client.agents.messages.create(
