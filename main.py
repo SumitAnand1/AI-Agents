@@ -54,7 +54,7 @@ functions = FunctionTool(functions=user_functions)
 agent = project_client.agents.create_agent(
     model=model_name,
     name="medical-agent",
-    instructions="You have access to a function `search_wikipedia(query)` that contains summaries of medical terms. Always try to call this function first for medical terms. Only use your own knowledge if no result is found.",
+    instructions="You have access to a function `search_wikipedia(query)` that contains summaries of medical terms. You can choose to call this function based on the user query.",
     tools=functions.definitions,
 )
 print(f"Created agent, ID: {agent.id}")
@@ -63,11 +63,14 @@ print(f"Created agent, ID: {agent.id}")
 thread = project_client.agents.threads.create()
 print(f"Created thread, ID: {thread.id}")
 
+#---------------- User Query -----------
+query = "Insulin"
+
 # Send a message to the thread
 message = project_client.agents.messages.create(
     thread_id=thread.id,
     role="user",
-    content="When was Insulin discovered?",
+    content=query,
 )
 print(f"Created message, ID: {message['id']}")
 
@@ -86,7 +89,7 @@ while run.status in ["queued", "in_progress", "requires_action"]:
         tool_outputs = []
         for tool_call in tool_calls:
             if tool_call.function.name == "search_wikipedia":
-                output = search_wikipedia("Insulin")
+                output = search_wikipedia(query)
                 if output is None:
                     output = "No summary found."  # fallback
                 tool_outputs.append({"tool_call_id": tool_call.id, "output": output})
